@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:13.4
     hostname: db
-    container_name: 2parcial-postgres
+    container_name: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -16,7 +16,7 @@ services:
       
   cloudBeaver:
     image: dbeaver/cloudbeaver:22.3.0
-    container_name: 2parcial-cloudbeaver
+    container_name: cloudbeaver
     hostname: cloudbeaver
     tty: true
     ports:
@@ -28,7 +28,7 @@ services:
 
   backend:
     build: ./backend
-    container_name: 2parcial-fastapi
+    container_name: fastapi
     restart: always
     depends_on:
       - db
@@ -43,7 +43,7 @@ services:
       - ./backend/app:/app
 
   frontend:
-    container_name: 2parcial-nextjs
+    container_name: nextjs
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -56,9 +56,6 @@ services:
     depends_on:
       - backend
     ports:
-      - "3040:3000"
+      - "${NEXT_PORT}:3000"
     volumes:
       - ./frontend/store-nextjs:/app
-
-volumes:
-  pgdata:
